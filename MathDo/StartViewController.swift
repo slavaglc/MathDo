@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StartViewController: UIViewController {
+class StartViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +23,5 @@ class StartViewController: UIViewController {
         
         view.addSubview(label)
     }
-
-
 }
 
