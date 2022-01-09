@@ -31,6 +31,7 @@ final class FormulaCreatingView: UIView {
     private lazy var variablesTableView: UITableView = {
         let tableView = UITableView(frame: CGRect(x: 10, y: 10, width: 100, height: 100
                                                  ), style: .insetGrouped)
+        tableView.backgroundColor = .clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
