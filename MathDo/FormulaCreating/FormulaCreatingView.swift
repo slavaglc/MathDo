@@ -24,13 +24,16 @@ final class FormulaCreatingView: UIView {
         let formulaTextField = UITextField()
         formulaTextField.translatesAutoresizingMaskIntoConstraints = false
         formulaTextField.borderStyle = .line
+        formulaTextField.placeholder = "Write your formula"
         return formulaTextField
     }()
     
     private lazy var variablesTableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: CGRect(x: 10, y: 10, width: 100, height: 100
+                                                 ), style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .blue
+        tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }()
     
@@ -58,6 +61,7 @@ final class FormulaCreatingView: UIView {
         addSubview(stackView)
         setStackViewSettings()
         setFormulaTextFieldSettings()
+        setVariablesTableViewSettings()
         setAddVariableButtonSettings()
     }
     
@@ -74,9 +78,30 @@ final class FormulaCreatingView: UIView {
         formulaTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor ).isActive = true
     }
     
+    private func setVariablesTableViewSettings() {
+        variablesTableView.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+        variablesTableView.separatorStyle = .none
+    }
+    
     private func setAddVariableButtonSettings() {
         addVariableButton.heightAnchor.constraint(equalToConstant: frame.width / 7).isActive = true
         addVariableButton.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
         addVariableButton.translatesAutoresizingMaskIntoConstraints = false
     }
+}
+
+extension FormulaCreatingView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        "Variables"
+    }
+    
+    
 }
