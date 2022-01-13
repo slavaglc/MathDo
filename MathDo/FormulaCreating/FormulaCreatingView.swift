@@ -23,8 +23,9 @@ final class FormulaCreatingView: UIView {
     private lazy var formulaTextField: UITextField  = {
         let formulaTextField = UITextField()
         formulaTextField.translatesAutoresizingMaskIntoConstraints = false
-        formulaTextField.borderStyle = .line
+        formulaTextField.borderStyle = .roundedRect
         formulaTextField.placeholder = "Write your formula"
+        formulaTextField.clearButtonMode = .whileEditing
         return formulaTextField
     }()
     
