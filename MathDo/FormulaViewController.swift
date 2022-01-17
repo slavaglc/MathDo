@@ -8,14 +8,21 @@
 import UIKit
 
 class FormulaViewController: UIViewController {
+    
+    var formula: Formula!
+    let label = UILabel(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        let label = UILabel(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
-        label.text = "Hello World!"
-        
         view.addSubview(label)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.title = formula.name
+        navigationController?.navigationBar.prefersLargeTitles = true
+        label.text = formula.body
     }
 
 }

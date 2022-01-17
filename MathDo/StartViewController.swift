@@ -9,7 +9,7 @@ import UIKit
 
 class StartViewController: UITableViewController {
     
-    let formulas = ["Ohm's law", "Integral", "Quadratic equation"]
+    let formulas = Formula.getData()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class StartViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         var content = cell.defaultContentConfiguration()
-        content.text = formulas[indexPath.row]
+        content.text = formulas[indexPath.row].name
         cell.contentConfiguration = content
         
         return cell
@@ -50,6 +50,7 @@ class StartViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let formulaVC = FormulaViewController()
+        formulaVC.formula = formulas[indexPath.row]
         show(formulaVC, sender: nil)
     }
 }
