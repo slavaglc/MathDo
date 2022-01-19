@@ -9,7 +9,7 @@ import UIKit
 
 class StartViewController: UITableViewController {
     
-    let formulas = Formula.getData()
+    var formulas = Formula.getData()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,9 @@ class StartViewController: UITableViewController {
     
     private func setButtonSettings() {
         let addItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(routeToFomulaCreatingVC))
+        
         navigationItem.rightBarButtonItem = addItem
+        navigationItem.leftBarButtonItem = editButtonItem
     }
     
     private func setNavigationBarSettings() {
@@ -42,6 +44,7 @@ class StartViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         var content = cell.defaultContentConfiguration()
+        content.image = UIImage(systemName: "function")
         content.text = formulas[indexPath.row].name
         cell.contentConfiguration = content
         
@@ -53,5 +56,11 @@ class StartViewController: UITableViewController {
         formulaVC.formula = formulas[indexPath.row]
         show(formulaVC, sender: nil)
     }
+ 
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        formulas.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
 }
 

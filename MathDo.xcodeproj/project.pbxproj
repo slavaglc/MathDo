@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		895D8BEF278C6DF800139F2A /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895D8BEE278C6DF800139F2A /* Model.swift */; };
 		895D8BF1278F4FF500139F2A /* FormulaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895D8BF0278F4FF500139F2A /* FormulaViewController.swift */; };
+		896368C2279873C900BB6FA9 /* FormulaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896368C1279873C900BB6FA9 /* FormulaView.swift */; };
 		89691B842786DFF4005674C9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89691B832786DFF4005674C9 /* AppDelegate.swift */; };
 		89691B862786DFF4005674C9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89691B852786DFF4005674C9 /* SceneDelegate.swift */; };
 		89691B882786DFF4005674C9 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89691B872786DFF4005674C9 /* StartViewController.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		895D8BEE278C6DF800139F2A /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		895D8BF0278F4FF500139F2A /* FormulaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaViewController.swift; sourceTree = "<group>"; };
+		896368C1279873C900BB6FA9 /* FormulaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormulaView.swift; sourceTree = "<group>"; };
 		89691B802786DFF4005674C9 /* MathDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MathDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89691B832786DFF4005674C9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89691B852786DFF4005674C9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		896368C02798739900BB6FA9 /* FormulaView */ = {
+			isa = PBXGroup;
+			children = (
+				895D8BF0278F4FF500139F2A /* FormulaViewController.swift */,
+				896368C1279873C900BB6FA9 /* FormulaView.swift */,
+			);
+			path = FormulaView;
+			sourceTree = "<group>";
+		};
 		89691B772786DFF4005674C9 = {
 			isa = PBXGroup;
 			children = (
@@ -66,9 +77,9 @@
 			children = (
 				89691B832786DFF4005674C9 /* AppDelegate.swift */,
 				89691B852786DFF4005674C9 /* SceneDelegate.swift */,
+				896368C02798739900BB6FA9 /* FormulaView */,
 				F9E19674278A4968008FEF7A /* NavigationController.swift */,
 				89691B872786DFF4005674C9 /* StartViewController.swift */,
-				895D8BF0278F4FF500139F2A /* FormulaViewController.swift */,
 				F9279AB7278B4EE7005C1071 /* FormulaCreating */,
 				89691B8C2786DFF5005674C9 /* Assets.xcassets */,
 				89691B8E2786DFF5005674C9 /* LaunchScreen.storyboard */,
@@ -161,6 +172,7 @@
 				F9279AB6278B4EE3005C1071 /* FormulaCreatingView.swift in Sources */,
 				89691B882786DFF4005674C9 /* StartViewController.swift in Sources */,
 				895D8BF1278F4FF500139F2A /* FormulaViewController.swift in Sources */,
+				896368C2279873C900BB6FA9 /* FormulaView.swift in Sources */,
 				F9E19675278A4968008FEF7A /* NavigationController.swift in Sources */,
 				89691B842786DFF4005674C9 /* AppDelegate.swift in Sources */,
 				89691B862786DFF4005674C9 /* SceneDelegate.swift in Sources */,
