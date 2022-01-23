@@ -10,6 +10,15 @@ import UIKit
 
 final class FormulaCreatingView: UIView {
 
+    weak var formulaCreatingVC: FormulaCreatingViewController!
+    
+    lazy var formulaTextField: UITextField  = {
+        let formulaTextField = UITextField()
+        formulaTextField.translatesAutoresizingMaskIntoConstraints = false
+        formulaTextField.borderStyle = .line
+        formulaTextField.placeholder = "Write your formula"
+        return formulaTextField
+    }()
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -20,13 +29,6 @@ final class FormulaCreatingView: UIView {
         return stackView
     }()
     
-    private lazy var formulaTextField: UITextField  = {
-        let formulaTextField = UITextField()
-        formulaTextField.translatesAutoresizingMaskIntoConstraints = false
-        formulaTextField.borderStyle = .line
-        formulaTextField.placeholder = "Write your formula"
-        return formulaTextField
-    }()
     
     private lazy var variablesTableView: UITableView = {
         let tableView = UITableView(frame: CGRect(x: 10, y: 10, width: 100, height: 100
@@ -48,6 +50,10 @@ final class FormulaCreatingView: UIView {
         return addVariableButton
     }()
     
+    convenience init(viewController: FormulaCreatingViewController) {
+        self.init()
+        formulaCreatingVC = viewController
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -89,6 +95,7 @@ final class FormulaCreatingView: UIView {
         addVariableButton.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
         addVariableButton.translatesAutoresizingMaskIntoConstraints = false
     }
+    
 }
 
 extension FormulaCreatingView: UITableViewDelegate, UITableViewDataSource {

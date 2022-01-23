@@ -10,7 +10,7 @@ import UIKit
 
  final class FormulaCreatingViewController: UIViewController {
 
-     private lazy var formulaCreatingView: UIView = { FormulaCreatingView() }()
+     private lazy var formulaCreatingView: FormulaCreatingView = { FormulaCreatingView(viewController: self) }()
      
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,8 +21,14 @@ import UIKit
          view = formulaCreatingView
      }
      
+    @objc func readFormula(sender: UIButton) {
+        print("result:", FormulaReader.shared.getResult(formulaCreatingView.formulaTextField.text ?? ""))
+     }
+     
      private func setupGUI() {
          navigationItem.title = "Formula creating"
+         let addItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(readFormula(sender:)))
+         navigationItem.rightBarButtonItem = addItem
      }
 
 }
