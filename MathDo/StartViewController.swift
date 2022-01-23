@@ -8,19 +8,16 @@
 import UIKit
 
 class StartViewController: UITableViewController {
+    
+    var formulas = Formula.getData()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setButtonSettings()
         setNavigationBarSettings()
         view.backgroundColor = .white
-      
         
-        
-        let label = UILabel(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
-        label.text = "Hello World!"
-        
-        view.addSubview(label)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     @objc private func routeToFomulaCreatingVC() {
@@ -30,11 +27,40 @@ class StartViewController: UITableViewController {
     
     private func setButtonSettings() {
         let addItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(routeToFomulaCreatingVC))
+        
         navigationItem.rightBarButtonItem = addItem
+        navigationItem.leftBarButtonItem = editButtonItem
     }
     
     private func setNavigationBarSettings() {
         navigationItem.title = "MathDo"
     }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        formulas.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        var content = cell.defaultContentConfiguration()
+        content.image = UIImage(systemName: "function")
+        content.text = formulas[indexPath.row].name
+        cell.contentConfiguration = content
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let formulaVC = FormulaViewController()
+        formulaVC.formula = formulas[indexPath.row]
+        show(formulaVC, sender: nil)
+    }
+ 
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        formulas.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
 }
 
