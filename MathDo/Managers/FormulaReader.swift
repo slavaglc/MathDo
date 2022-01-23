@@ -185,9 +185,10 @@ final class FormulaReader {
     }
     
     private func toOperate(expression: inout String, operationType: OperationType) {
-        let prototypeExpression = expression
+        
         let operation: Character = operationType.rawValue
         correctExpression(expression: &expression)
+        let prototypeExpression = expression
         print("expression to operate:", expression)
         guard let firstOperand = expression.getFirstOperand(of: operation) else  {
             print("returned1")
@@ -212,21 +213,27 @@ final class FormulaReader {
             print(result)
         case .division:
             result = getResultOfDivision(firstNumber: firstNumber, secondNumber: secondNumber)
-            print(result)
+            print("result of division:", result)
         case .addition:
             result = getResultOfAddition(firstNumber: firstNumber, secondNumber: secondNumber)
             print(result)
         case .subtraction:
             result = getResultOfSubtraction(firstNumber: firstNumber, secondNumber: secondNumber)
-            print("result of subtraction", result)
+            print("result of subtraction:", result)
         }
 
         
         guard let firstIndex = prototypeExpression.getFirstOperandStartIndex(of: operation) else { return }
         print("first Index of First Operand:", expression[firstIndex])
         guard let secondIndex = prototypeExpression.getSecondOperandLastIndex(of: operation) else { return }
+        print("expression before replacing:", expression)
+        print("prototype expression:", prototypeExpression)
+        print("substring of range before:", expression[firstIndex...secondIndex])
         expression = expression.replacingCharacters(in: firstIndex...secondIndex, with: result)
+        print("new expression:", expression)
+//        print("substring of range after:", expression[firstIndex...secondIndex])
         correctExpression(expression: &expression)
+        print("expression after correcting:", expression)
     }
     
     private func getResultOfDivision(firstNumber: Double, secondNumber: Double) -> String {
