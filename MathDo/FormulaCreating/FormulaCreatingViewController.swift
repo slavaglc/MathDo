@@ -24,7 +24,9 @@ import UIKit
     @objc func readFormula(sender: UIButton) {
 //        print("result:", FormulaReader.shared.getResult(formulaCreatingView.formulaTextField.text ?? ""))
         FormulaReader.shared.correctInputExpression(expression: &formulaCreatingView.formulaTextField.text)
-        FormulaReader.shared.verifyFormulaSyntax(expression: formulaCreatingView.formulaTextField.text ?? "")
+        FormulaReader.shared.verifyFormulaSyntax(expression: formulaCreatingView.formulaTextField.text ?? "") { success, error in
+            
+        }
      }
      
      private func setupGUI() {
