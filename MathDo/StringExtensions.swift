@@ -78,6 +78,23 @@ extension String {
         return startFindingIndexRecursion(index: operationIndex)
     }
     
+    func getFirstOperandStartIndex(of operationIndex: String.Index) -> String.Index? {
+        let operationsSymbols: [Character] = ["+", "-", "/", "*", "^", "!"]
+            
+        func startFindingIndexRecursion(index: String.Index) -> String.Index {
+            guard self.startIndex != index else { return index }
+            let indexBefore = self.index(before: index)
+            let charBefore = self[indexBefore]
+            if operationsSymbols.contains(charBefore){
+                return index
+            } else {
+                return startFindingIndexRecursion(index: indexBefore)
+            }
+        }
+        
+        return startFindingIndexRecursion(index: operationIndex)
+    }
+    
     
     func getSecondOperandLastIndex(of operation: Character) -> String.Index? {
         let operationsSymbols: [Character] = ["+", "-", "/", "*", "^", "!"]
@@ -110,6 +127,18 @@ extension String {
         return firstOperand
     }
     
+    func getFirstOperand(of operationIndex: String.Index) -> String? {
+        guard let firstIndex = self.getFirstOperandStartIndex(of: operationIndex) else { return nil}
+        let secondIndex = operationIndex
+//        guard firstIndex != self.startIndex else { return nil }
+        let firstOperand = String(self[firstIndex..<secondIndex] )
+        if firstOperand.contains("minus") {
+            return firstOperand.replacingOccurrences(of: "minus", with: "-")
+        }
+        
+        return firstOperand
+    }
+    
     func getSecondOperand(of operation: Character) -> String? {
         guard let operationIndex = self.firstIndex(of: operation) else { return nil }
         guard let secondIndex = self.getSecondOperandLastIndex(of: operation) else { return nil }
@@ -125,6 +154,19 @@ extension String {
         guard let firstIndex = self.getFirstOperandStartIndex(of: operation) else { return nil }
         guard let secondIndex = self.getSecondOperandLastIndex(of: operation) else { return nil }
         return String(self[firstIndex...secondIndex] )
+    }
+    
+    func getSymbolBefore(index: String.Index) -> Character? {
+        guard index != startIndex else { return nil }
+        let indexBefore = self.index(before: index)
+        return self[indexBefore]
+    }
+    
+    func getSymbolAfter(index: String.Index) -> Character? {
+        guard index != lastIndex || index != endIndex else { return nil }
+        let indexAfter = self.index(after: index)
+        guard index != self.lastIndex || indexAfter != self.endIndex else { return nil }
+        return self[indexAfter]
     }
     
     }

@@ -8,32 +8,16 @@
 import Foundation
 
 
-enum OperationType: Character {
-    case exponentiation = "^"
-    case multiplication = "*"
-    case division = "/"
-    case addition = "+"
-    case subtraction = "-"
-}
-
-    struct Operations {
-    var additionNumbers: [String]
-    var subtractionNumbers: [String]
-    var divisionNumbers: [String]
-    var multiplicationNumbers: [String]
-    }
-
 
 final class FormulaReader {
-    
-    
+
    static let shared = FormulaReader()
     
-    private var secondExpression = ""
-    private var numberOfBlock = 0
+    var allowedSymbols = AllowedSymbols()
     
     private init() {}
     
+//    MARK: - Formula reading methods
     func getResult(_ formula: String) -> String {
         let sequencedArray = getSequencedArray(expression: formula)
         let result = startCounting(for: sequencedArray)
@@ -264,6 +248,35 @@ final class FormulaReader {
         }
     }
     
+    private func getArrayOfNumbers(expression: String) -> [String] {
+        let operationsSymbols: CharacterSet = ["+", "-", "/", "*"]
+        let numbers = expression.components(separatedBy: operationsSymbols)
+        return numbers.filter { char in
+            char != ""
+        }
+    }
+    
+    private func expressionIsFinished(expression: String) -> Bool {
+        let operationsSymbols: [Character] = ["+", "-", "/", "*", "^", "!"]
+        var isContains: Bool = false
+        
+        expression.forEach { char in
+            isContains = operationsSymbols.contains(char) ? true : isContains
+        }
+        
+        return !isContains
+    }
+    
+//    MARK: - Formula correction methods
+    
+    public func correctInputExpression(expression: inout String?) {
+        findHiddenMultiplication(expression: &expression)
+        findExtraSignsAfterOpeningBracket(expression: &expression)
+        findExtraSignBeforeClosingBracket(expression: &expression)
+        
+        findSpaces(expression: &expression)
+    }
+    
     private func correctExpression(expression: inout String) {
         findSignCollisions(expression: &expression)
         findMinusBeforeNumber(expression: &expression)
@@ -284,23 +297,158 @@ final class FormulaReader {
         expression = expression.replacingOccurrences(of: "++", with: "+")
     }
     
-    private func getArrayOfNumbers(expression: String) -> [String] {
-        let operationsSymbols: CharacterSet = ["+", "-", "/", "*"]
-        let numbers = expression.components(separatedBy: operationsSymbols)
-        return numbers.filter { char in
-            char != ""
+    private func findSpaces(expression: inout String?) {
+        expression = expression?.replacingOccurrences(of: " ", with: "")
+    }
+    
+    private func findHiddenMultiplication(expression: inout String?) {
+        let operationSymbolsString = String(OperationType.getOperationSymbols())
+        guard var newExpression = expression else { return }
+        var openingBracketsIndices: [String.Index] {
+            newExpression.indices.filter { newExpression[$0] == "("}
+        }
+        for numberOfIndex in 0..<openingBracketsIndices.count {
+            let indexOfExpression = openingBracketsIndices[numberOfIndex]
+            guard let symbolBefore = expression?.getSymbolBefore(index: indexOfExpression) else { continue }
+            if !operationSymbolsString.contains(symbolBefore) {
+                newExpression.insert("*", at: indexOfExpression)
+            }
+        }
+        expression = newExpression
+    }
+    
+    private func findExtraSignsAfterOpeningBracket(expression: inout String?) {
+        guard let newExpression = expression else { return }
+        var operationSymbolsWithoutMinusString: String {
+            let operationSymbols = String(OperationType.getOperationSymbols())
+            let operationSymbolsWithoutMinus = operationSymbols.filter { $0 != "-"}
+            return operationSymbolsWithoutMinus
+        }
+        var operationsIndices: [String.Index] {
+            newExpression.indices.filter { operationSymbolsWithoutMinusString.contains(newExpression[$0]) }
+        }
+        
+        for numberOfIndex in 0..<operationsIndices.count {
+          let indexOfOperation = operationsIndices[numberOfIndex]
+            guard let symbolBefore = newExpression.getSymbolBefore(index: indexOfOperation) else {
+                if indexOfOperation == newExpression.startIndex {
+                    expression = expression?.replacingCharacters(in: indexOfOperation...indexOfOperation, with: " ")
+                }
+                continue }
+            if symbolBefore  == "(" {
+                expression = expression?.replacingCharacters(in: indexOfOperation...indexOfOperation, with: " ")
+            }
         }
     }
     
-    private func expressionIsFinished(expression: String) -> Bool {
-        let operationsSymbols: [Character] = ["+", "-", "/", "*", "^", "!"]
-        var isContains: Bool = false
-        
-        expression.forEach { char in
-            isContains = operationsSymbols.contains(char) ? true : isContains
+    private func findExtraSignBeforeClosingBracket(expression: inout String?) {
+        guard let newExpression = expression else { return }
+        let operationSymbols = String(OperationType.getOperationSymbols())
+        print(newExpression)
+        var operationsIndices: [String.Index] {
+            newExpression.indices.filter {
+                operationSymbols.contains(newExpression[$0])
+            }
         }
         
-        return !isContains
+        for numberOfIndex in 0..<operationsIndices.count {
+            let indexOfOperation = operationsIndices[numberOfIndex]
+            guard let symbolAfter = newExpression.getSymbolAfter(index: indexOfOperation) else {
+                if newExpression.lastIndex == indexOfOperation {
+                    expression = expression?.replacingCharacters(in: indexOfOperation...indexOfOperation, with: " ")
+                }
+                continue }
+            if symbolAfter == ")" {
+                expression = expression?.replacingCharacters(in: indexOfOperation...indexOfOperation, with: " ")
+            }
+        }
+    }
+
+//    MARK: - Formula verify methods
+    
+    public func verifyFormulaSyntax(expression: String, completion: (_ success: Bool, _ error: Error? )->()) {
+        let failed = false
+        guard expressionHasOnlyAllowedSymbols(expression: expression) else { return
+            completion(failed, createError(withText: "expression has illegal symbols", code: 0))
+            }
+        guard expressionIsNotExmpty(expression: expression) else { return
+            completion(failed, createError(withText: "expression is empty", code: 1))
+            }
+        guard parenthesesOrderIsCorrect(expression: expression) else { return
+            completion(failed, createError(withText: "parentheses order is incorrect", code: 2))
+        }
+        guard parenthesesCountIsCorrect(expression: expression) else { return
+            completion(failed, createError(withText: #"opening brackets "(" count is not conform to closing brackets ")" count"#, code: 3))
+        }
+        guard expressionHasNotSignCollision(expression: expression) else { return
+            completion(failed, createError(withText: "expression has sign collision", code: 4))
+        }
+        completion(!failed, nil)
+    }
+    
+    private func createError(withText text: String, code: Int) -> Error {
+        NSError(domain: "", code: code, userInfo: [ NSLocalizedDescriptionKey: text])
+    }
+    
+    private func expressionHasOnlyAllowedSymbols(expression: String) -> Bool {
+        var isContains = true
+        expression.forEach { char in
+            isContains = allowedSymbols.allowedSymbols.contains(char) ? isContains : false
+        }
+        return isContains
+    }
+    
+    private func expressionIsNotExmpty(expression: String) -> Bool {
+        !expression.isEmpty
+    }
+    
+    private func parenthesesOrderIsCorrect(expression: String) -> Bool {
+        var openingBrackets = 0
+        var closingBrackets = 0
+        var isCorrect = true
+        expression.forEach { char in
+            if char == "(" {
+                openingBrackets += 1
+            } else if char == ")" {
+                closingBrackets += 1
+            }
+            
+            if closingBrackets > openingBrackets {
+                isCorrect = false
+                return
+            }
+        }
+        return isCorrect
+    }
+    
+    private func parenthesesCountIsCorrect(expression: String) -> Bool {
+        var openingBrackets = 0
+        var closingBrackets = 0
+        
+        expression.forEach { char in
+            openingBrackets += char == "(" ? 1 : 0
+            closingBrackets += char == ")" ? 1 : 0
+        }
+        
+        return openingBrackets == closingBrackets
+    }
+    
+    private func expressionHasNotSignCollision(expression: String) -> Bool {
+        var hasNotCollision = true
+        var previousCharIsOperationSign = false
+        let operationSymbols = OperationType.getOperationSymbols()
+        expression.forEach { char in
+            if operationSymbols.contains(char) {
+                if previousCharIsOperationSign {
+                    hasNotCollision = false
+                    return
+                }
+                previousCharIsOperationSign = true
+            } else {
+                previousCharIsOperationSign = false
+            }
+        }
+        return hasNotCollision
     }
 }
 
