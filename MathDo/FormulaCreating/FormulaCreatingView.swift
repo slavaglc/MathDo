@@ -29,7 +29,6 @@ final class FormulaCreatingView: UIView {
         return stackView
     }()
     
-    
     private lazy var variablesTableView: UITableView = {
         let tableView = UITableView(frame: CGRect(x: 10, y: 10, width: 100, height: 100
                                                  ), style: .insetGrouped)
